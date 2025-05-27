@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>편대클럽 경기정하기</title>
+    <title>편대클럽 룰렛</title>
     <style>
         * {
             box-sizing: border-box;
@@ -14,15 +14,25 @@
             font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f0f0f0;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            min-height: 100vh;
             touch-action: manipulation;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .container {
             width: 100%;
             max-width: 100%;
             min-height: 100vh;
-            background-color: white;
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
             padding: 16px;
         }
 
@@ -30,6 +40,8 @@
             text-align: center;
             font-size: 24px;
             margin: 10px 0 20px 0;
+            color: #1a2a6c;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
 
         .input-section {
@@ -43,14 +55,22 @@
             flex: 1;
             padding: 12px;
             font-size: 16px;
-            border: 1px solid #ddd;
+            border: 2px solid rgba(26, 42, 108, 0.1);
             border-radius: 8px;
             -webkit-appearance: none;
+            background: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #1a2a6c;
+            box-shadow: 0 0 10px rgba(26, 42, 108, 0.1);
         }
 
         button {
             padding: 12px 20px;
-            background-color: #4CAF50;
+            background-color: #1a2a6c;
             color: white;
             border: none;
             border-radius: 8px;
@@ -58,10 +78,10 @@
             cursor: pointer;
             -webkit-appearance: none;
             touch-action: manipulation;
+            transition: transform 0.2s ease, background-color 0.3s ease;
         }
 
         button:active {
-            background-color: #45a049;
             transform: scale(0.98);
         }
 
@@ -77,20 +97,27 @@
             align-items: center;
             padding: 12px;
             margin: 8px 0;
-            background-color: #f9f9f9;
+            background: rgba(255, 255, 255, 0.9);
             border-radius: 8px;
             font-size: 16px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease;
+        }
+
+        #itemList li:hover {
+            transform: translateX(5px);
         }
 
         .delete-btn {
-            background-color: #ff4444;
+            background-color: #b21f1f;
             padding: 8px 16px;
             font-size: 14px;
             margin-left: 10px;
+            transition: background-color 0.3s ease;
         }
 
         .delete-btn:active {
-            background-color: #cc0000;
+            background-color: #8b0000;
         }
 
         #roulette {
@@ -110,7 +137,8 @@
             height: 0;
             border-left: 15px solid transparent;
             border-right: 15px solid transparent;
-            border-top: 30px solid #333;
+            border-top: 30px solid #1a2a6c;
+            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.2));
             z-index: 10;
         }
 
@@ -118,7 +146,13 @@
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            background: white;
+        }
+
+        .button-container {
+            text-align: center;
+            margin: 20px 0;
         }
 
         #startBtn {
@@ -130,7 +164,8 @@
             padding: 15px;
             font-size: 18px;
             font-weight: bold;
-            background-color: #2196F3;
+            background-color: #1a2a6c;
+            box-shadow: 0 4px 15px rgba(26, 42, 108, 0.2);
         }
 
         #resetBtn {
@@ -142,32 +177,31 @@
             padding: 15px;
             font-size: 18px;
             font-weight: bold;
-            background-color: #f44336;
-        }
-
-        .button-container {
-            text-align: center;
-            margin: 20px 0;
+            background-color: #b21f1f;
+            box-shadow: 0 4px 15px rgba(178, 31, 31, 0.2);
         }
 
         #startBtn:disabled {
             background-color: #cccccc;
             cursor: not-allowed;
+            box-shadow: none;
         }
 
         #startBtn:active:not(:disabled) {
-            background-color: #1976D2;
+            background-color: #141e4d;
         }
 
         #result {
             margin: 20px 0;
-            padding: 15px;
+            padding: 20px;
             font-size: 1.2em;
             font-weight: bold;
             text-align: center;
-            background-color: #f8f8f8;
+            background: rgba(255, 255, 255, 0.9);
             border-radius: 8px;
             min-height: 60px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            color: #1a2a6c;
         }
 
         @media (max-width: 480px) {
@@ -196,7 +230,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>편대클럽 경기정하기</h1>
+        <h1>편대클럽 룰렛</h1>
         
         <div class="input-section">
             <input type="text" id="itemInput" placeholder="항목 입력">
@@ -224,7 +258,6 @@
         const canvas = document.getElementById('rouletteCanvas');
         const ctx = canvas.getContext('2d');
 
-        // 캔버스 크기 설정
         function setCanvasSize() {
             const container = document.getElementById('roulette');
             const size = container.clientWidth;
@@ -233,7 +266,6 @@
             drawRoulette();
         }
 
-        // 화면 크기 변경 시 캔버스 크기 조정
         window.addEventListener('resize', setCanvasSize);
         setCanvasSize();
 
@@ -253,7 +285,6 @@
             input.focus();
         }
 
-        // 엔터 키로 항목 추가
         document.getElementById('itemInput').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 addItem();
@@ -296,7 +327,6 @@
                 const startAngle = i * anglePerItem + currentRotation;
                 const endAngle = (i + 1) * anglePerItem + currentRotation;
 
-                // 섹션 그리기
                 ctx.beginPath();
                 ctx.moveTo(centerX, centerY);
                 ctx.arc(centerX, centerY, radius, startAngle, endAngle);
@@ -307,7 +337,6 @@
                 ctx.lineWidth = 2;
                 ctx.stroke();
 
-                // 텍스트 그리기
                 ctx.save();
                 ctx.translate(centerX, centerY);
                 ctx.rotate(startAngle + anglePerItem / 2);
@@ -318,10 +347,9 @@
                 ctx.restore();
             }
 
-            // 중앙 점 그리기
             ctx.beginPath();
             ctx.arc(centerX, centerY, 5, 0, Math.PI * 2);
-            ctx.fillStyle = '#333';
+            ctx.fillStyle = '#1a2a6c';
             ctx.fill();
         }
 
@@ -332,14 +360,13 @@
             const startBtn = document.getElementById('startBtn');
             startBtn.disabled = true;
 
-            // 진동 효과 (지원되는 기기에서만)
             if (navigator.vibrate) {
                 navigator.vibrate(100);
             }
 
-            const spins = 5 + Math.random() * 5; // 5-10 회전
+            const spins = 5 + Math.random() * 5;
             targetRotation = currentRotation + (Math.PI * 2 * spins);
-            const duration = 5000; // 5초
+            const duration = 5000;
             const startTime = Date.now();
             const startRotation = currentRotation;
 
@@ -348,7 +375,6 @@
                 const elapsed = now - startTime;
                 const progress = Math.min(elapsed / duration, 1);
 
-                // 이징 함수 적용
                 const easing = 1 - Math.pow(1 - progress, 3);
                 currentRotation = startRotation + (targetRotation - startRotation) * easing;
 
@@ -360,7 +386,6 @@
                     isSpinning = false;
                     startBtn.disabled = false;
                     showResult();
-                    // 결과 표시 시 진동
                     if (navigator.vibrate) {
                         navigator.vibrate([100, 100, 100]);
                     }
@@ -371,37 +396,29 @@
         }
 
         function resetRoulette() {
-            // 진동 효과
             if (navigator.vibrate) {
                 navigator.vibrate(50);
             }
 
-            // 모든 항목 초기화
             items = [];
             currentRotation = 0;
             targetRotation = 0;
             
-            // UI 업데이트
             updateItemList();
             drawRoulette();
             
-            // 결과 초기화
             document.getElementById('result').textContent = '';
-            
-            // 입력창 포커스
             document.getElementById('itemInput').focus();
         }
 
         function showResult() {
             const anglePerItem = (Math.PI * 2) / items.length;
-            // 화살표는 위쪽(270도 = 3π/2)을 가리키므로, 이를 기준으로 계산
             const normalizedRotation = (currentRotation + Math.PI * 1.5) % (Math.PI * 2);
             const winningIndex = Math.floor(normalizedRotation / anglePerItem);
             
             document.getElementById('result').textContent = `당첨: ${items[winningIndex]}`;
         }
 
-        // 초기 룰렛 그리기
         drawRoulette();
     </script>
 </body>
