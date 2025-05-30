@@ -412,10 +412,12 @@
         }
 
         function showResult() {
+            if (items.length === 0) return;
             const anglePerItem = (Math.PI * 2) / items.length;
-            const normalizedRotation = (currentRotation + Math.PI * 1.5) % (Math.PI * 2);
-            const winningIndex = Math.floor(normalizedRotation / anglePerItem);
-            
+            // currentRotation은 시계방향이므로, 12시(위쪽)는 -Math.PI/2
+            let pointerAngle = (-currentRotation - Math.PI / 2) % (Math.PI * 2);
+            if (pointerAngle < 0) pointerAngle += Math.PI * 2;
+            const winningIndex = Math.floor(pointerAngle / anglePerItem) % items.length;
             document.getElementById('result').textContent = `당첨: ${items[winningIndex]}`;
         }
 
